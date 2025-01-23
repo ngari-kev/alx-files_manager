@@ -8,7 +8,8 @@ class DBClient {
     const databaseURL = `mongodb://${host}:${port}/${database}`;
 
     this.client = new MongoClient(databaseURL, { useUnifiedTopology: true });
-    this.client.connect()
+    this.client
+      .connect()
       .then(() => console.log('Connected to MongoDB'))
       .catch((err) => console.error('Failed to connect to MongoDB:', err));
   }
@@ -27,6 +28,10 @@ class DBClient {
 
   async usersCollection() {
     return this.client.db().collection('users');
+  }
+
+  async filesCollection() {
+    return this.client.db().collection('files');
   }
 }
 

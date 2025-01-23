@@ -1,5 +1,6 @@
 import express from 'express';
 import SetRoutes from './routes';
+import './worker';
 
 const server = express();
 
