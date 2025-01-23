@@ -25,7 +25,7 @@ export default class UsersController {
         return res.status(400).json({ error: "Already exist" });
       }
 
-      // Create new user
+      // Create a new user
       const hashedPassword = sha1(password);
       const result = await (
         await dbClient.usersCollection()
