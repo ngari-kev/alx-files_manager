@@ -1,30 +1,48 @@
-import sha1 from 'sha1';
-import dbClient from '../utils/db';
+import sha1 from "sha1";
+import dbClient from "../utils/db";
 
 export default class UsersController {
   static async postNew(req, res) {
-    const email = req.body ? req.body.email : null;
-    const password = req.body ? req.body.password : null;
-
-    if (!email) {
-      res.status(400).json({ error: 'Missing email' });
+    // Check if email is provided
+    if (!req.body.email) {
+      return res.status(400).json({ error: "Missing email" });
     }
 
-    if (!password) {
-      res.status(400).json({ error: 'Missing password' });
+    // Check if password is provided
+    if (!req.body.password) {
+      return res.status(400).json({ error: "Missing password" });
     }
 
-    const user = await (await dbClient.usersCollection()).findOne({ email });
+    const { email, password } = req.body;
 
-    if (user) {
-      res.status(400).json({ error: 'Already exists' });
-      return;
+    try {
+      // Check if user already exists
+      const existingUser = await (
+        await dbClient.usersCollection()
+      ).findOne({ email });
+
+      if (existingUser) {
+        return res.status(400).json({ error: "Already exist" });
+      }
+
+      // Create new user
+      const hashedPassword = sha1(password);
+      const result = await (
+        await dbClient.usersCollection()
+      ).insertOne({
+        email,
+        password: hashedPassword,
+      });
+
+      // Return new user
+      return res.status(201).json({
+        id: result.insertedId.toString(),
+        email,
+      });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
-    const insertUser = await (await dbClient.usersCollection())
-      .insertOne({ email, password: sha1(password) });
-    const userId = insertUser.insertId.toString();
-
-    res.status(201).json({ email, id: userId });
   }
 
   static async getMe(req, res) {
