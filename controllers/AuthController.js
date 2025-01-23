@@ -3,7 +3,6 @@ import sha1 from 'sha1';
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
 
-
 export default class AuthController {
   static async getConnect(req, res) {
     // Get Authorization header
