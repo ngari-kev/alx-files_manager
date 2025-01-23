@@ -58,7 +58,7 @@ export default class UsersController {
       }
 
       const user = await (await dbClient.usersCollection())
-        .findOne({ _id: dbClient.client.ObjectID(userId) });
+        .findOne({ _id: ObjectID(userId) });
 
       if (!user) {
         return res.status(401).json({ error: 'Unauthorized' });
@@ -66,11 +66,10 @@ export default class UsersController {
 
       return res.status(200).json({
         id: user._id.toString(),
-        email: user.email,
+        email: user.email
       });
     } catch (error) {
-      console.error('Error in getMe:', error);
-      return res.status(500).json({ error: 'Internal server error' });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
   }
 }
