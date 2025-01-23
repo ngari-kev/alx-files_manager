@@ -1,16 +1,16 @@
-import sha1 from "sha1";
-import dbClient from "../utils/db";
+import sha1 from 'sha1';
+import dbClient from '../utils/db';
 
 export default class UsersController {
   static async postNew(req, res) {
     // Check if email is provided
     if (!req.body.email) {
-      return res.status(400).json({ error: "Missing email" });
+      return res.status(400).json({ error: 'Missing email' });
     }
 
     // Check if password is provided
     if (!req.body.password) {
-      return res.status(400).json({ error: "Missing password" });
+      return res.status(400).json({ error: 'Missing password' });
     }
 
     const { email, password } = req.body;
@@ -22,7 +22,7 @@ export default class UsersController {
       ).findOne({ email });
 
       if (existingUser) {
-        return res.status(400).json({ error: "Already exist" });
+        return res.status(400).json({ error: 'Already exist' });
       }
 
       // Create a new user
@@ -40,8 +40,8 @@ export default class UsersController {
         email,
       });
     } catch (error) {
-      console.error("Error creating user:", error);
-      return res.status(500).json({ error: "Internal server error" });
+      console.error('Error creating user:', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   }
 
